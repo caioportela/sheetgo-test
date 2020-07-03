@@ -17,6 +17,8 @@ EMAILS = ['lucas@sheetgo.com', 'mauricio@sheetgo.com', 'rafael@sheetgo.com']
 @auth.verify_token
 def verify_token(token):
     """Decode and verify the auth token."""
+    if not token: return False
+
     token_decoded = jwt.decode(token, SECRET)
     email = token_decoded['email']
 
