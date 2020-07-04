@@ -56,3 +56,11 @@ Requesting the API through cURL with a valid token:
   ```bash
   $ curl -X POST http://localhost:5000/image/convert/fromdropbox -H "Authorization:$(python src/auth_token.py)" -H "Dropbox-Token:<access_token>" -d path=/image.jpeg -d format=png
   ```
+  
+## Unit Tests
+
+[`pytest`](https://docs.pytest.org/en/stable/index.html) was used for the unit testing
+
+```bash
+$ pytest
+```
