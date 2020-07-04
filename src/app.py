@@ -1,5 +1,6 @@
 import io
 import jwt
+
 from flask import Flask, jsonify, render_template, request, send_file
 from flask_httpauth import HTTPTokenAuth
 from openpyxl import load_workbook
@@ -17,21 +18,20 @@ EMAILS = ['lucas@sheetgo.com', 'mauricio@sheetgo.com', 'rafael@sheetgo.com']
 @auth.verify_token
 def verify_token(token):
     """Decode and verify the auth token."""
-    if not token: return False
 
-    token_decoded = jwt.decode(token, SECRET)
+    if not token:
+        return False
+
+    token_decoded = jwt.decode(token, SECRET, algorithms=['HS256'])
     email = token_decoded['email']
 
     return email in EMAILS
-
-@app.route('/')
-def index():
-    return render_template('index.html')
 
 @app.route('/excel/info', methods=['POST'])
 @auth.login_required
 def excel_info():
     """Return the tabs from the excel file, ordered alphabetically."""
+
     sheet = request.files['file']
     sheet = load_workbook(sheet, read_only=True)
 
@@ -42,6 +42,7 @@ def excel_info():
 @auth.login_required
 def image_convert():
     """Convert the format of an image."""
+
     format = request.form.get('format')
     file = request.files['file']
 
