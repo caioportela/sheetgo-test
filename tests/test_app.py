@@ -68,3 +68,10 @@ def test_without_image(headers):
     with app.app.test_client() as client:
         response = client.post('/image/convert', headers=headers)
         assert response.status_code == 400
+
+def test_image_get(headers):
+    """Test not allowed method."""
+
+    with app.app.test_client() as client:
+        response = client.get('/image/convert', headers=headers)
+        assert response.status_code == 405
