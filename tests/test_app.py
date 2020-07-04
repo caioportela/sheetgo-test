@@ -37,3 +37,27 @@ def test_excel_get(headers):
     with app.app.test_client() as client:
         response = client.get('/excel/info', headers=headers)
         assert response.status_code == 405
+
+def test_convert_jpeg(headers):
+    """Make sure output is a png image."""
+
+    with open('image1.jpeg', 'rb') as file:
+        data = {'file': file, 'format': 'png'}
+
+        with app.app.test_client() as client:
+            response = client.post('/image/convert', data=data, headers=headers)
+
+            # Check if jpeg has been converted to png
+            assert response.mimetype == 'image/png'
+
+def test_convert_png(headers):
+    """Make sure output is a jpeg image."""
+
+    with open('image2.png', 'rb') as file:
+        data = {'file': file, 'format': 'jpeg'}
+
+        with app.app.test_client() as client:
+            response = client.post('/image/convert', data=data, headers=headers)
+
+            # Check if png has been converted to jpeg
+            assert response.mimetype == 'image/jpeg'
