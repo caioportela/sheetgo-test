@@ -16,10 +16,17 @@ def test_with_file(headers):
         data = {'file': file}
 
         with app.app.test_client() as client:
-            request = client.post('/excel/info', data=data, headers=headers)
+            response = client.post('/excel/info', data=data, headers=headers)
 
             # Check if response is a JSON
-            assert request.is_json
+            assert response.is_json
 
             # Check if the list is sorted
-            assert request.json == sorted(request.json)
+            assert response.json == sorted(response.json)
+
+def test_excel_get(headers):
+    """Test not allowed method."""
+
+    with app.app.test_client() as client:
+        request = client.get('/excel/info', headers=headers)
+        assert request.status_code == 405
