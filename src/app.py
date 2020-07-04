@@ -15,6 +15,12 @@ SECRET = 'z6Ct_d2Wy0ZcZZVUYD3beI5ZCSsFrR6-f3ZDyn_MW00'
 # Accepted emails for authorization
 EMAILS = ['lucas@sheetgo.com', 'mauricio@sheetgo.com', 'rafael@sheetgo.com']
 
+@app.errorhandler(400)
+def bad_request(error):
+    """Handle Bad Request description."""
+
+    return error.description + '\n', 400
+
 @auth.verify_token
 def verify_token(token):
     """Decode and verify the auth token."""
@@ -48,6 +54,15 @@ def image_convert():
     """Convert the format of an image."""
 
     format = request.form.get('format')
+
+    # Check if the post request has the format data
+    if format is None:
+        abort(400, description='No format found')
+
+    # Check if the post request has the file part
+    if 'file' not in request.files:
+        abort(400, description='No file found')
+
     file = request.files['file']
 
     file_object = io.BytesIO()
