@@ -30,6 +30,7 @@ def test_without_file(headers):
     with app.app.test_client() as client:
         response = client.post('/excel/info', headers=headers)
         assert response.status_code == 400
+        assert response.get_data(as_text=True) == '400 Bad Request - No file sent\n'
 
 def test_excel_get(headers):
     """Test not allowed method."""
@@ -68,6 +69,7 @@ def test_without_image(headers):
     with app.app.test_client() as client:
         response = client.post('/image/convert', headers=headers)
         assert response.status_code == 400
+        assert response.get_data(as_text=True) == '400 Bad Request - No format sent\n'
 
 def test_image_get(headers):
     """Test not allowed method."""
@@ -75,3 +77,11 @@ def test_image_get(headers):
     with app.app.test_client() as client:
         response = client.get('/image/convert', headers=headers)
         assert response.status_code == 405
+
+def test_dropbox_token(headers):
+    """Check response when the dropbox access token is not passed."""
+
+    with app.app.test_client() as client:
+        response = client.post('image/convert/fromdropbox', headers=headers)
+        assert response.status_code == 403
+        assert response.get_data(as_text=True) == '403 Forbidden - No dropbox access token sent\n'
