@@ -25,7 +25,7 @@ def test_with_file(headers):
             assert response.json == sorted(response.json)
 
 def test_without_file(headers):
-    """See what happens when there's no file."""
+    """See what happens when there's no xlsx file."""
 
     with app.app.test_client() as client:
         response = client.post('/excel/info', headers=headers)
@@ -61,3 +61,10 @@ def test_convert_png(headers):
 
             # Check if png has been converted to jpeg
             assert response.mimetype == 'image/jpeg'
+
+def test_without_image(headers):
+    """Check response when there's no image."""
+
+    with app.app.test_client() as client:
+        response = client.post('/image/convert', headers=headers)
+        assert response.status_code == 400
