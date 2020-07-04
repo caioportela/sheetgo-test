@@ -1,7 +1,7 @@
 import io
 import jwt
 
-from flask import Flask, jsonify, render_template, request, send_file
+from flask import Flask, abort, jsonify, request, send_file
 from flask_httpauth import HTTPTokenAuth
 from openpyxl import load_workbook
 from PIL import Image
@@ -31,6 +31,10 @@ def verify_token(token):
 @auth.login_required
 def excel_info():
     """Return the tabs from the excel file, ordered alphabetically."""
+
+    # Check if the post request has the file part
+    if 'file' not in request.files:
+        abort(400, description='No file sent')
 
     sheet = request.files['file']
     sheet = load_workbook(sheet, read_only=True)

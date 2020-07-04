@@ -24,9 +24,16 @@ def test_with_file(headers):
             # Check if the list is sorted
             assert response.json == sorted(response.json)
 
+def test_without_file(headers):
+    """See what happens when there's no file."""
+
+    with app.app.test_client() as client:
+        response = client.post('/excel/info', headers=headers)
+        assert response.status_code == 400
+
 def test_excel_get(headers):
     """Test not allowed method."""
 
     with app.app.test_client() as client:
-        request = client.get('/excel/info', headers=headers)
-        assert request.status_code == 405
+        response = client.get('/excel/info', headers=headers)
+        assert response.status_code == 405
